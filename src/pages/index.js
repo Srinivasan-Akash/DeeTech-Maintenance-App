@@ -1,18 +1,16 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
+import Login from './components/login'
 import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import React from 'react'
 
 export default function Home() {
   return (
-    <>
+    <React.Fragment>
       <Head>
-        <title>Create Next App</title>
+        <title>Dee-Tech Maintenance App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>h</h1>
-    </>
+      <Login></Login>
+    </React.Fragment>
   )
 }
