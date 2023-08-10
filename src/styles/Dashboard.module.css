@@ -2,4 +2,223 @@
     background: linear-gradient(0deg, #10141F 0%, #10141F 100%), linear-gradient(0deg, #10141F 0%, #10141F 100%), linear-gradient(0deg, #10141F 0%, #10141F 100%), #10141F;
     height: 100vh;
     width: 100vw;
+    color: hsla(0, 0%, 100%, 0.6);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.container {
+    display: flex;
+}
+
+.aside {
+    width: 20%;
+    height: 100vh;
+    border: 2px solid hsla(0, 0%, 100%, 0.05);
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 1em;
+    justify-content: center;
+    margin-top: 1em;
+}
+
+.logoContainer h1,
+.main h1 {
+    font-weight: 400;
+    font-size: 1.2em;
+}
+
+.profilePic {
+    border-radius: 100%;
+    height: 80px;
+    width: 80px;
+}
+
+.userInfo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 3em;
+}
+
+.navItems {
+    margin: 3em 1em 0 1em;
+}
+
+.navItems p {
+    background: #353537;
+    padding: 1em;
+    border-radius: 12px;
+    margin-bottom: .5em;
+    cursor: pointer;
+}
+
+.navItems p:hover {
+    background: #464648;
+    transition: all .5s ease;
+}
+
+
+.main {
+    width: 80%;
+}
+
+.main h1 {
+    font-size: 1.5em;
+}
+
+.main .mainNavbar {
+    margin: 1em 0;
+    height: 40px;
+    /* background: green; */
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em;
+    align-items: center;
+}
+
+.searchField {
+    background: #464648a4;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: .7em 3em .7em 3em;
+    width: 100%;
+    color: hsla(0, 0%, 100%, 0.6) !important;
+}
+
+.inputBox {
+    position: relative;
+    width: 30vw;
+}
+
+.searchIcon {
+    position: absolute;
+    top: 50%;
+    left: 3%;
+    transform: translate(0%, -50%);
+}
+
+.logOut {
+    background: #fff27a;
+    padding: .7em 3em .7em 3em;
+    border-radius: 10px;
+    margin: 0 1em 0 1em;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.logOut:hover {
+    background: #fff27acd;
+    transition: all .5s ease;
+}
+
+.rightSideNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notificationBell {
+    outline: none;
+    border: 2px solid hsla(0, 0%, 100%, 0.05);
+    padding: .5em .7em;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mainContent {
+    margin: 1em;
+}
+
+.tasksContainer {
+    width: 100%;
+    max-height: 70vh;
+    background: #fff27a;
+    border-radius: 12px;
+    padding: 1em;
+}
+
+.tasksNavbar {
+    color: #20344D;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 1;
+}
+
+.tasksNavbar .right {
+    display: flex;
+    gap: 2em;
+    text-align: center;
+}
+
+.tasksNavbar div h2 {
+    font-size: 1.5em;
+}
+
+.tasksList {
+    margin-top: 1em;
+    color: #20344D;
+    /* align-items: center; */
+    /* justify-content: space-between; */
+    font-size: .8em;
+    overflow: scroll;
+    max-height: 50vh;
+}
+
+.todoHeadline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tasksList {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+}
+
+.table th,
+.table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #10141F;
+    font-size: 1.2em;
+}
+
+.table th {
+    background: #10141F;
+    color: hsla(0, 0%, 100%, 0.6);
+}
+
+.headlinesTable th:nth-child(1){
+    border-top-left-radius: 12px;
+}
+
+
+
+.headlinesTable th:nth-child(4){
+    border-top-right-radius: 12px;
+}
+
+@media (max-width: 768px) {
+    .table th,
+    .table td {
+        padding: 8px 12px;
+    }
 }
