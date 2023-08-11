@@ -7,51 +7,36 @@ import { database } from '../appwrite/appwriteConfig';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function employeeDashboard({ userInfo, tasks }) {
+  const [timeRemaining, setTimeRemaining] = useState('');
 
-  const data = [
-    {
-      area: "Raw Se wage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    },
-    {
-      area: "Raw Sewage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    },
-    {
-      area: "Raw Sewage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    },
-    {
-      area: "Raw Sewage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    },
-    {
-      area: "Raw Sewage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    },
-    {
-      area: "Raw Sewage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    },
-    {
-      area: "Raw Sewage",
-      motorName: "Raw Sewage Pump Motor",
-      description: "Check temperature",
-      status: "DONE"
-    }
-  ];
+  useEffect(() => {
+    const calculateRemainingTime = () => {
+      const now = new Date();
+      const targetTime = new Date(now);
+      targetTime.setHours(18, 0, 0, 0); // 6:00 PM IST
+      
+      let remainingTime = targetTime - now;
+      if (remainingTime < 0) {
+        remainingTime = 0;
+      }
+      
+      const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+      const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+      
+      setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+    };
+
+    // Call the function immediately to set initial remaining time
+    calculateRemainingTime();
+
+    // Update remaining time every second
+    const intervalId = setInterval(calculateRemainingTime, 1000);
+
+    return () => {
+      clearInterval(intervalId); // Clean up interval on component unmount
+    };
+  }, [])
+
 
   return (
     <div className={styles.container}>
@@ -94,17 +79,17 @@ export default function employeeDashboard({ userInfo, tasks }) {
             <nav className={styles.tasksNavbar}>
               <div>
                 <h2>Total Tasks</h2>
-                <p><b>12</b> Tasks Remaining</p>
+                <p><b>{tasks ? (tasks[0].motorInfo.split(",").length).toString().padStart(2, '0') : 0}</b> Tasks Remaining</p>
               </div>
 
               <div className={styles.right}>
                 <div>
-                  <h2>12:30</h2>
+                  <h2>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h2>
                   <p>Current Time</p>
                 </div>
 
                 <div>
-                  <h2>1:30</h2>
+                  <h2>{timeRemaining}</h2>
                   <p>Time Remaining</p>
                 </div>
               </div>
@@ -116,29 +101,26 @@ export default function employeeDashboard({ userInfo, tasks }) {
                   <tr className={styles.headlinesTable}>
                     <th>Area</th>
                     <th>Motor Name</th>
-                    <th>Description</th>
+                    <th>Total Motors</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
+                  <td rowSpan={5}>Centrifuge</td>
+
                   {tasks ? (
                     tasks.map((task, index) => (
                       <>
-                        <tr key={index}>
-                          {/* <td>{task.area}</td>
-                      <td>{task.motorInfo}</td>
-                      <td>{task.tasks}</td>
-                      <td>{task.status}</td> */}
-                          <td rowSpan={5}>Centrifuge</td>
-                          <td>MOTOR A</td>
-                          <td>5</td>
-                          <td>DONE</td>
-                        </tr>
-                        <tr>
-                          <td>MOTOR 2</td>
-                          <td>1</td>
-                          <td>DONE</td>
-                        </tr></>
+                        {task.motorInfo.split(",").map((motor, index) => (
+                          <tr key={index}>
+                            <td>{motor.slice(0, -1)}</td>
+                            <td>{motor.charAt(motor.length - 1)}</td>
+                            <td>
+                              <button>Complete</button>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
                     ))
                   ) : (
                     <tr>
