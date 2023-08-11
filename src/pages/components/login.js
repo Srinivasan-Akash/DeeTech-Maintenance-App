@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '@/styles/Login.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import LoadingScreen from './loadingScreen';
 
 // React Toastify
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,23 +15,24 @@ import { account } from '../appwrite/appwriteConfig';
 
 export default function Login() {
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
         const userData = account.get()
         userData.then(
-            function(res) {
+            function (res) {
                 console.log(res)
                 router.push('/dashboard');
             },
-            function(error) {
+            function (error) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const userId = urlParams.get('userId');
                 const secret = urlParams.get('secret');
-        
+
                 if (userId !== null && secret !== null) {
                     let promise = account.updateMagicURLSession(userId, secret);
-                
+
                     promise.then(function (response) {
                         console.log(response); // Success
                         toast.success(`🤘 Operation Sucessfull}`, {
@@ -58,9 +60,11 @@ export default function Login() {
                         });
                     });
                 }
+
+                setLoading(false);
             }
         )
-    }, [])
+    }, [router])
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -80,7 +84,7 @@ export default function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
         if (email.trim() !== '') {
             try {
                 await toast.promise(
@@ -119,32 +123,36 @@ export default function Login() {
 
     return (
         <main className={styles.loginContainer}>
-            <div className={styles.loginForm}>
-                <Image src={"/Login/logo.png"} alt={"logo"} width={80} height={80} />
-                <h1>Welcome To Dee-Tech</h1>
-                <p>Login/Register With Your Email</p>
-                <form className={styles.formInput} onSubmit={handleSubmit}>
-                    <input
-                        type="email"
-                        placeholder="Enter Your Email"
-                        value={email}
-                        onChange={handleEmailChange}
+            {loading ? <LoadingScreen /> : (
+                <>
+                    <div className={styles.loginForm}>
+                        <Image src={"/Login/logo.png"} alt={"logo"} width={80} height={80} />
+                        <h1>Welcome To Dee-Tech</h1>
+                        <p>Login/Register With Your Email</p>
+                        <form className={styles.formInput} onSubmit={handleSubmit}>
+                            <input
+                                type="email"
+                                placeholder="Enter Your Email"
+                                value={email}
+                                onChange={handleEmailChange}
+                            />
+                            <button type="submit">Continue</button>
+                        </form>
+                    </div>
+                    <ToastContainer
+                        position="bottom-center"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="dark"
                     />
-                    <button type="submit">Continue</button>
-                </form>
-            </div>
-            <ToastContainer
-                position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-            />
+                </>
+            )}
         </main>
     );
 }
