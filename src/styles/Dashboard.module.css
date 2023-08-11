@@ -2,6 +2,7 @@
     background: linear-gradient(0deg, #10141F 0%, #10141F 100%), linear-gradient(0deg, #10141F 0%, #10141F 100%), linear-gradient(0deg, #10141F 0%, #10141F 100%), #10141F;
     height: 100vh;
     width: 100vw;
+    overflow-x: hidden;
     color: hsla(0, 0%, 100%, 0.6);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -13,6 +14,9 @@
 .aside {
     width: 20%;
     height: 100vh;
+    position: sticky;
+    left: 0;
+    top: 0;
     border: 2px solid hsla(0, 0%, 100%, 0.05);
 }
 
@@ -29,6 +33,13 @@
 .main h1 {
     font-weight: 400;
     font-size: 1.2em;
+}
+
+.main {
+    height: fit-content;
+    background: #10141F;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .profilePic {
@@ -140,12 +151,17 @@
     margin: 1em;
 }
 
-.tasksContainer {
+.completedTasksContainer, .inCompletedTasksContainer {
     width: 100%;
     max-height: 70vh;
-    background: #fff27a;
+    background: #ff7a7a;
     border-radius: 12px;
     padding: 1em;
+    margin-bottom: 1em;
+}
+
+.inCompletedTasksContainer{
+    background: #90ff7a;
 }
 
 .tasksNavbar {
@@ -206,11 +222,17 @@
     color: hsla(0, 0%, 100%, 0.6);
 }
 
+.table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #10141F;
+    color: hsla(0, 0%, 100%, 0.6);
+}
+
 .headlinesTable th:nth-child(1){
     border-top-left-radius: 12px;
 }
-
-
 
 .headlinesTable th:nth-child(4){
     border-top-right-radius: 12px;
@@ -220,5 +242,46 @@
     .table th,
     .table td {
         padding: 8px 12px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .aside {
+        display: none;
+    }
+
+    .main {
+        width: 100%;
+    }
+
+    .mainNavbar h1 {
+        display: none;
+    }
+
+    .rightSideNav {
+        width: 100%;
+    }
+
+    .inputBox {
+        width: 50%;
+    }
+}
+
+
+@media screen and (max-width: 500px) {
+    .tasksNavbar {
+        flex-wrap: wrap;
+    }
+
+    .right {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1em;
+    }
+
+    .tasksNavbar .right div h2 {
+        font-size: 3em !important;
     }
 }

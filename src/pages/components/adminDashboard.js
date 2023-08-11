@@ -6,7 +6,7 @@ import { FaSearch, FaBell } from 'react-icons/fa';
 export default function adminDashboard() {
   const data = [
     {
-      area: "Raw Se wage",
+      area: "Raw Sewage",
       motorName: "Raw Sewage Pump Motor",
       description: "Check temperature",
       status: "DONE"
@@ -86,11 +86,11 @@ export default function adminDashboard() {
         </nav>
 
         <main className={styles.mainContent}>
-          <div className={styles.tasksContainer}>
+        <div className={styles.inCompletedTasksContainer}>
             <nav className={styles.tasksNavbar}>
               <div>
-                <h2>Total Tasks</h2>
-                <p><b>12</b> Tasks Remaining</p>
+                <h2>Completed Employee Tasks</h2>
+                <p><b>12</b> successfully completed</p>
               </div>
 
               <div className={styles.right}>
@@ -110,10 +110,54 @@ export default function adminDashboard() {
               <table className={styles.table}>
                 <thead>
                   <tr className={styles.headlinesTable}>
-                    <th>Area</th>
-                    <th>Motor Name</th>
-                    <th>Description</th>
-                    <th>Status</th>
+                  <th>Task Name</th>
+                    <th>Employee Assigned</th>
+                    <th>Assigned Date</th>
+                    <th>Number Of Motors</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.area}</td>
+                      <td>{item.motorName}</td>
+                      <td>{item.description}</td>
+                      <td>{item.status}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div> 
+
+          <div className={styles.completedTasksContainer}>
+            <nav className={styles.tasksNavbar}>
+              <div>
+                <h2>Failed Employee Tasks</h2>
+                <p><b>12</b> failed to complete.</p>
+              </div>
+
+              <div className={styles.right}>
+                <div>
+                  <h2>12:30</h2>
+                  <p>Current Time</p>
+                </div>
+
+                <div>
+                  <h2>1:30</h2>
+                  <p>Time Remaining</p>
+                </div>
+              </div>
+            </nav>
+
+            <div className={styles.tasksList}>
+              <table className={styles.table}>
+                <thead>
+                  <tr className={styles.headlinesTable}>
+                    <th>Task Name</th>
+                    <th>Employee Assigned</th>
+                    <th>Assigned Date</th>
+                    <th>Number Of Motors</th>
                   </tr>
                 </thead>
                 <tbody>
