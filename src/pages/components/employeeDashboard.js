@@ -1,9 +1,13 @@
 import styles from '@/styles/Dashboard.module.css';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
 
-export default function employeeDashboard() {
+import { database } from '../appwrite/appwriteConfig';
+import { v4 as uuidv4 } from 'uuid';
+
+export default function employeeDashboard({ userInfo, tasks }) {
+
   const data = [
     {
       area: "Raw Se wage",
@@ -59,8 +63,8 @@ export default function employeeDashboard() {
 
         <div className={styles.userInfo}>
           <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.jpeg"} alt='A profile pic' />
-          <h3>Louis Carter</h3>
-          <p>qa.sixsigma@gmail.com</p>
+          <h3>{userInfo.name}</h3>
+          <p>{userInfo.email}</p>
         </div>
 
         <div className={styles.navItems}>
@@ -117,14 +121,30 @@ export default function employeeDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.area}</td>
-                      <td>{item.motorName}</td>
-                      <td>{item.description}</td>
-                      <td>{item.status}</td>
+                  {tasks ? (
+                    tasks.map((task, index) => (
+                      <>
+                        <tr key={index}>
+                          {/* <td>{task.area}</td>
+                      <td>{task.motorInfo}</td>
+                      <td>{task.tasks}</td>
+                      <td>{task.status}</td> */}
+                          <td rowSpan={5}>Centrifuge</td>
+                          <td>MOTOR A</td>
+                          <td>5</td>
+                          <td>DONE</td>
+                        </tr>
+                        <tr>
+                          <td>MOTOR 2</td>
+                          <td>1</td>
+                          <td>DONE</td>
+                        </tr></>
+                    ))
+                  ) : (
+                    <tr>
+                      <td>Loading tasks...</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

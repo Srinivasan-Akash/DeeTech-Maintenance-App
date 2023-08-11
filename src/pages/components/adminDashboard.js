@@ -3,7 +3,7 @@ import React from 'react'
 import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
 
-export default function adminDashboard() {
+export default function adminDashboard( { name } ) {
   const data = [
     {
       area: "Raw Sewage",
@@ -59,7 +59,7 @@ export default function adminDashboard() {
 
         <div className={styles.userInfo}>
           <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.jpeg"} alt='A profile pic' />
-          <h3>Louis Carter</h3>
+          <h3>{ name } </h3>
           <p>qa.sixsigma@gmail.com</p>
         </div>
 

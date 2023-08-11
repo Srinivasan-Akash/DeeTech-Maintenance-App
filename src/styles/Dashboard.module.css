@@ -151,7 +151,7 @@
     margin: 1em;
 }
 
-.completedTasksContainer, .inCompletedTasksContainer {
+.completedTasksContainer, .inCompletedTasksContainer, .tasksContainer {
     width: 100%;
     max-height: 70vh;
     background: #ff7a7a;
@@ -162,6 +162,10 @@
 
 .inCompletedTasksContainer{
     background: #90ff7a;
+}
+
+.tasksContainer {
+    background: #fff27a;
 }
 
 .tasksNavbar {
@@ -215,6 +219,11 @@
     text-align: left;
     border-bottom: 1px solid #10141F;
     font-size: 1.2em;
+}
+
+.table td div {
+    padding: 12px 0px;
+    border-bottom: 1px solid #10141F;
 }
 
 .table th {
