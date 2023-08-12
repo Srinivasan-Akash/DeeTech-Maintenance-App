@@ -2,38 +2,68 @@ import styles from '@/styles/Dashboard.module.css';
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
-
-import { database } from '../appwrite/appwriteConfig';
-import { v4 as uuidv4 } from 'uuid';
+import { FaGear } from "react-icons/fa6";
+import EmployeeSettings from './employeeSettings';
+import { account } from '../appwrite/appwriteConfig';
+import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function employeeDashboard({ userInfo, tasks }) {
   const [timeRemaining, setTimeRemaining] = useState('');
+  const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
+  const router = useRouter()
+
+  const toggleSettingsPanel = () => {
+    setIsSettingsPanelOpen(!isSettingsPanelOpen);
+  };
+
+  const logOut = async () => {
+    try {
+      await account.deleteSession("current")
+      router.push("/")
+      
+      toast.success(`✨ Logged Out Sucessfully`, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch {
+      toast.success(`❌ Logging Out Failed !`, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }
 
   useEffect(() => {
     const calculateRemainingTime = () => {
       const now = new Date();
       const targetTime = new Date(now);
       targetTime.setHours(18, 0, 0, 0); // 6:00 PM IST
-      
       let remainingTime = targetTime - now;
       if (remainingTime < 0) {
         remainingTime = 0;
       }
-      
       const hours = Math.floor(remainingTime / (1000 * 60 * 60));
       const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-      
       setTimeRemaining(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
     };
-
-    // Call the function immediately to set initial remaining time
     calculateRemainingTime();
-
-    // Update remaining time every second
     const intervalId = setInterval(calculateRemainingTime, 1000);
-
     return () => {
-      clearInterval(intervalId); // Clean up interval on component unmount
+      clearInterval(intervalId);
     };
   }, [])
 
@@ -47,7 +77,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
         </div>
 
         <div className={styles.userInfo}>
-          <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.jpeg"} alt='A profile pic' />
+          <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.png"} alt='A profile pic' />
           <h3>{userInfo.name}</h3>
           <p>{userInfo.email}</p>
         </div>
@@ -69,8 +99,15 @@ export default function employeeDashboard({ userInfo, tasks }) {
               <FaSearch className={styles.searchIcon} />
               <input className={styles.searchField} placeholder='Search Tasks' />
             </div>
-            <button className={styles.logOut}>Log Out</button>
-            <button className={styles.notificationBell}><FaBell /></button>
+            <button onClick={logOut} className={styles.logOut}>Log Out</button>
+            <button onClick={toggleSettingsPanel} className={styles.settingsIcon}>
+              <FaGear />
+            </button>
+            {isSettingsPanelOpen && (
+              <div className={styles.settingsPanel}>
+                <EmployeeSettings userInfo={userInfo} />
+              </div>
+            )}
           </div>
         </nav>
 

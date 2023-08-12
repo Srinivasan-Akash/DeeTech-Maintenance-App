@@ -32,11 +32,10 @@ export default function dashboard() {
           theme: "dark",
         });
 
-        const getTasks = database.listDocuments("64d45c73133d8e39e84d", "64d5f385d4889c9ffbda", [Query.equal("name", userInformation.name)]);
+        const getTasks = database.listDocuments("64d45c73133d8e39e84d", "64d5f385d4889c9ffbda", [Query.equal("email", userInformation.email)]);
         getTasks.then(
           function (tasksRes) {
             setTasks(tasksRes.documents);
-            // console.log(tasksRes.documents, userInformation, "USERDETAILS")
           },
           function (tasksErr) {
             console.log(tasksErr);
@@ -62,8 +61,6 @@ export default function dashboard() {
 
   return (
     <div className={styles.dashboardContainer}>
-      {/* {userDetails? <AdminDashboard/>: <LoadingScreen/>} */}
-      {/* <EmployeeDashboard/> */}
       {loader ? (
                 <LoadingScreen />
             ) : userDetails && userDetails.prefs.role === 'operator' ? (

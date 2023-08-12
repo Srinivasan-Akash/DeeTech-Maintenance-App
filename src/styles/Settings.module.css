@@ -1,0 +1,50 @@
+.settingsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 2em;
+}
+
+.profilePic {
+    border-radius: 100%;
+    height: 80px;
+    width: 80px;
+}
+
+.userInfo, .form {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 3em;
+}
+
+.form {
+    margin-top: 1em;
+}
+
+.form input, .form button {
+    background: #464648a4;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 1em;
+    margin-top: .5em;
+    border: 1px solid #8DA0AE;
+    width: 100%;
+    color: hsla(0, 0%, 100%, 0.6) !important;
+}
+
+.form button {
+    background: #192229;
+    transition: .5s all ease;
+}
+
+.form button:hover {
+    background: #10141F;
+    cursor: pointer;
+}
