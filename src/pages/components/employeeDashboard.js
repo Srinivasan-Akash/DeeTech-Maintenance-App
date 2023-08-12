@@ -6,23 +6,43 @@ import { FaGear } from "react-icons/fa6";
 import EmployeeSettings from './employeeSettings';
 import { account } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import EmployeeForm from './employeeForm';
 
 export default function employeeDashboard({ userInfo, tasks }) {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const router = useRouter()
 
   const toggleSettingsPanel = () => {
     setIsSettingsPanelOpen(!isSettingsPanelOpen);
   };
 
+  const openForm = (e) => {
+    const tableRow = e.target.parentNode.parentNode
+    const table = tableRow.parentNode
+
+    const motorName = tableRow.querySelector("td").innerText
+    const totalMotors = tableRow.querySelector("td:nth-child(2)").innerText
+    const area = table.querySelector("td").innerText
+
+    console.log(motorName, totalMotors, area)
+    setIsPopupOpen(true);
+  }
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   const logOut = async () => {
     try {
       await account.deleteSession("current")
       router.push("/")
-      
+
       toast.success(`✨ Logged Out Sucessfully`, {
         position: "bottom-center",
         autoClose: 5000,
@@ -67,7 +87,6 @@ export default function employeeDashboard({ userInfo, tasks }) {
     };
   }, [])
 
-
   return (
     <div className={styles.container}>
       <aside className={styles.aside}>
@@ -91,6 +110,15 @@ export default function employeeDashboard({ userInfo, tasks }) {
       </aside>
 
       <main className={styles.main}>
+        {isPopupOpen && (
+          <div className={styles.overlay}>
+            <div className={styles.popup}>
+              {/* Popup content */}
+              <EmployeeForm ></EmployeeForm>
+              <button className={styles.closeButton} onClick={closePopup}><AiOutlineCloseCircle/></button>
+            </div>
+          </div>
+        )}
         <nav className={styles.mainNavbar}>
           <h1>Statistics</h1>
           <div className={styles.rightSideNav}>
@@ -153,7 +181,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
                             <td>{motor.slice(0, -1)}</td>
                             <td>{motor.charAt(motor.length - 1)}</td>
                             <td>
-                              <button>Complete</button>
+                              <button onClick={openForm}>Complete</button>
                             </td>
                           </tr>
                         ))}
@@ -171,6 +199,5 @@ export default function employeeDashboard({ userInfo, tasks }) {
         </main>
       </main>
     </div>
-
   )
 }
