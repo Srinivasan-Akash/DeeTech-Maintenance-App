@@ -8,13 +8,14 @@ import { account } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AiOutlineCloseCircle } from "react-icons/ai";
+import { AiFillCloseCircle } from "react-icons/ai";
 import EmployeeForm from './employeeForm';
 
 export default function employeeDashboard({ userInfo, tasks }) {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [formUIData, setFormUIData] = useState();
 
   const router = useRouter()
 
@@ -29,8 +30,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
     const motorName = tableRow.querySelector("td").innerText
     const totalMotors = tableRow.querySelector("td:nth-child(2)").innerText
     const area = table.querySelector("td").innerText
-
-    console.log(motorName, totalMotors, area)
+    setFormUIData({ motorName, totalMotors, area })
     setIsPopupOpen(true);
   }
 
@@ -113,9 +113,12 @@ export default function employeeDashboard({ userInfo, tasks }) {
         {isPopupOpen && (
           <div className={styles.overlay}>
             <div className={styles.popup}>
-              {/* Popup content */}
-              <EmployeeForm ></EmployeeForm>
-              <button className={styles.closeButton} onClick={closePopup}><AiOutlineCloseCircle/></button>
+              <nav>
+                <h1>Maintenance of {formUIData.totalMotors} {formUIData.motorName} at {formUIData.area}</h1>
+                <button className={styles.closeButton} onClick={closePopup}><AiFillCloseCircle /></button>
+              </nav>
+              <EmployeeForm tasks={tasks}></EmployeeForm>
+
             </div>
           </div>
         )}
@@ -171,7 +174,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
                   </tr>
                 </thead>
                 <tbody>
-                  <td rowSpan={5}>Centrifuge</td>
+                  <td rowSpan={5}>{tasks ? tasks[0].area : 'Loading area...'}</td>
 
                   {tasks ? (
                     tasks.map((task, index) => (

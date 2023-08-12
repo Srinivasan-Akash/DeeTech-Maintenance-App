@@ -18,7 +18,9 @@
     z-index: 99;
     border-radius: 12px;
     z-index: 99;
-    border: 2px dashed hsla(0, 0%, 100%, 0.484);
+    border: 2px solid #ffffff;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .overlay {
@@ -30,6 +32,46 @@
     width: 100%;
     height: 100%;
     background-color: rgba(173, 216, 230, 0.7); /* Light blue with alpha */
+}
+
+.popup nav {
+    background: #0c1725;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+    border-bottom: 2px dashed #8DA0AE;
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+
+.closeButton {
+    padding: .2em .5em;
+    background: transparent;
+    border: 2px dashed #8DA0AE;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+    transition: .5s all ease;
+}
+
+.closeButton:hover svg {
+    fill: #fff;
+    cursor: pointer;
+}
+
+.closeButton:hover {
+    border: 2px solid #fff;
+}
+
+.closeButton svg {
+    height: 2em;
+    width: 2em;
+    fill: #8DA0AE;
 }
 
 .container {
