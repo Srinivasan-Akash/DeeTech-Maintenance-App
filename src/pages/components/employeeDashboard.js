@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
 import { FaGear } from "react-icons/fa6";
 import EmployeeSettings from './employeeSettings';
-import { account } from '../appwrite/appwriteConfig';
+import { account, database } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,6 +18,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
   const [formUIData, setFormUIData] = useState();
 
   const router = useRouter()
+  console.log(tasks, "TASKL")
 
   const toggleSettingsPanel = () => {
     setIsSettingsPanelOpen(!isSettingsPanelOpen);
@@ -30,6 +31,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
     const motorName = tableRow.querySelector("td").innerText
     const totalMotors = tableRow.querySelector("td:nth-child(2)").innerText
     const area = table.querySelector("td").innerText
+
     setFormUIData({ motorName, totalMotors, area })
     setIsPopupOpen(true);
   }
@@ -117,7 +119,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
                 <h1>Maintenance of {formUIData.totalMotors} {formUIData.motorName} at {formUIData.area}</h1>
                 <button className={styles.closeButton} onClick={closePopup}><AiFillCloseCircle /></button>
               </nav>
-              <EmployeeForm tasks={tasks}></EmployeeForm>
+              <EmployeeForm formUIData={formUIData} tasks={tasks}></EmployeeForm>
 
             </div>
           </div>
