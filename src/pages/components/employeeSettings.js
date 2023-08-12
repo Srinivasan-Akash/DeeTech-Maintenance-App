@@ -11,8 +11,8 @@ export default function employeeSettings({ userInfo }) {
 
     const handleEditProfile = (e) => {
         e.preventDefault();
-
-        if (newName.trim() === '' || newProfilePic === null) {
+        // || newProfilePic === null
+        if (newName.trim() === '') {
             toast.error('Please fill in all fields.', {
                 position: 'bottom-right',
                 autoClose: 3000,
