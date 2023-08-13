@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
 import { FaGear } from "react-icons/fa6";
-import EmployeeSettings from './employeeSettings';
+import ProfileSettings from './profileSettings';
 import { account, database } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -151,7 +151,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
             </button>
             {isSettingsPanelOpen && (
               <div className={styles.settingsPanel}>
-                <EmployeeSettings userInfo={userInfo} />
+                <ProfileSettings userInfo={userInfo} />
               </div>
             )}
           </div>

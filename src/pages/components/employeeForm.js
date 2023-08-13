@@ -49,6 +49,7 @@ export default function EmployeeForm({ userInfo, formUIData, tasks }) {
           error: 'Operation Failed 🤯',
         }
       );
+
     } catch (error) {
       toast.error(`❌ Operation Failed: ${error.message}`, {
         position: "bottom-center",
@@ -60,6 +61,7 @@ export default function EmployeeForm({ userInfo, formUIData, tasks }) {
         progress: undefined,
         theme: "dark",
       });
+
     }
   };
 

@@ -171,6 +171,17 @@
     color: hsla(0, 0%, 100%, 0.6) !important;
 }
 
+.addEmployeeBtn {
+    padding: 1em 2em;
+    outline: none;
+    border: none;
+    background: #464648;
+    border: 2px solid hsla(0, 0%, 100%, 0.05);
+    color: #ffffff;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
 .inputBox {
     position: relative;
     width: 30vw;
@@ -386,4 +397,30 @@
     .logout {
         padding: .7em 1em .7em 1em !important;
     }
+}
+
+.employeesList {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    overflow-x: scroll;
+    padding: 1em 1em 1em 0;
+}
+
+
+.employee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #20344D;
+    border-radius: 12px;
+    width: fit-content;
+    height: fit-content;
+    padding: 1em;
+    gap: 1em;
+}
+
+.employee div {
+    line-height: .8;
 }

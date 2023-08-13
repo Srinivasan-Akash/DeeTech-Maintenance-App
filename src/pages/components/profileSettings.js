@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { account } from '../appwrite/appwriteConfig';
 
-export default function employeeSettings({ userInfo }) {
+export default function profileSettings({ userInfo }) {
     const [newName, setNewName] = useState('');
     // const [newProfilePic, setNewProfilePic] = useState(null);
 

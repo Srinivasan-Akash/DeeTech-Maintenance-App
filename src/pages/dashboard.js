@@ -66,7 +66,7 @@ export default function dashboard() {
             ) : userDetails && userDetails.prefs.role === 'operator' ? (
                 <EmployeeDashboard userInfo={userDetails} tasks={tasks}/>
             ) : (
-                <AdminDashboard userInfo={userDetails} tasks={tasks}/>
+                <AdminDashboard userInfo={userDetails}/>
             )}
       <ToastContainer
         position="bottom-center"
