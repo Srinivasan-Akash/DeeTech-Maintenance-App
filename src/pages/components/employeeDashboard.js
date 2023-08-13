@@ -119,7 +119,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
                 <h1>Maintenance of {formUIData.totalMotors} {formUIData.motorName} at {formUIData.area}</h1>
                 <button className={styles.closeButton} onClick={closePopup}><AiFillCloseCircle /></button>
               </nav>
-              <EmployeeForm formUIData={formUIData} tasks={tasks}></EmployeeForm>
+              <EmployeeForm userInfo={userInfo} formUIData={formUIData} tasks={tasks}></EmployeeForm>
 
             </div>
           </div>
