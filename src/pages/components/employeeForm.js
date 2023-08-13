@@ -15,10 +15,12 @@ export default function EmployeeForm({ userInfo, formUIData, tasks }) {
     }));
   };
 
-  const uploadToDataBase = async (data) => {
+  const uploadToDataBase = async (data, form) => {
     try {
-      const response = await database.createDocument("64d45c73133d8e39e84d", "64d775e89561f5813b3a", uuidv4(), data)
+      let response = await database.createDocument("64d45c73133d8e39e84d", "64d775e89561f5813b3a", uuidv4(), data)
       console.log("Document creation response:", response);
+
+      form.querySelector("button").innerText = "UPLOADING DONE"      
       return response;
     } catch (error) {
       console.error("Document creation  error:", error);
@@ -40,7 +42,7 @@ export default function EmployeeForm({ userInfo, formUIData, tasks }) {
           employeeEmail: userInfo.email,
           area: tasks ? tasks[0].area : 'Loading area...',
           motorName: motorName,
-        }),
+        }, form),
         {
           pending: 'Uploading Maintenance Data',
           success: 'Uploaded Successfully 👌',
@@ -90,9 +92,7 @@ export default function EmployeeForm({ userInfo, formUIData, tasks }) {
         return `${taskName} (Normal/Abnormal)`;
       } else if (taskName.includes('seal-healthiness')) {
         return `${taskName} (Good/Moderate/Damaged)`;
-      } else {
-        return taskName;
-      }
+      } else return taskName;
     };
 
     inputArray.push(
