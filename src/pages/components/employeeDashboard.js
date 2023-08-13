@@ -10,12 +10,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AiFillCloseCircle } from "react-icons/ai";
 import EmployeeForm from './employeeForm';
+import { Query } from 'appwrite';
 
 export default function employeeDashboard({ userInfo, tasks }) {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [formUIData, setFormUIData] = useState();
+  const [completedTasks, setCompletedTasks] = useState();
 
   const router = useRouter()
   console.log(tasks, "TASKL")
@@ -68,6 +70,17 @@ export default function employeeDashboard({ userInfo, tasks }) {
       });
     }
   }
+
+  useEffect(() => {
+    const promise = database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", [Query.equal("employeeEmail", userInfo.email)]);
+
+    promise.then(function (response) {
+      setCompletedTasks(response)
+      console.log(response, "DATA BASE RESPONSE IDIOT !!"); // Success
+    }, function (error) {
+      console.log(error); // Failure
+    });
+  }, [isPopupOpen])
 
   useEffect(() => {
     const calculateRemainingTime = () => {
@@ -149,7 +162,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
             <nav className={styles.tasksNavbar}>
               <div>
                 <h2>Total Tasks</h2>
-                <p><b>{tasks ? (tasks[0].motorInfo.split(",").length).toString().padStart(2, '0') : 0}</b> Tasks Remaining</p>
+                <p><b>{tasks ? (tasks[0].motorInfo.split(",").length).toString().padStart(2, '0'): 0}</b> Tasks Remaining</p>
               </div>
 
               <div className={styles.right}>
@@ -191,6 +204,68 @@ export default function employeeDashboard({ userInfo, tasks }) {
                           </tr>
                         ))}
                       </>
+                    ))
+                  ) : (
+                    <tr>
+                      <td>Loading tasks...</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className={styles.completedTasksContainer}>
+            <nav className={styles.tasksNavbar}>
+              <div>
+                <h2>Completed Employee Tasks</h2>
+                <p><b>{completedTasks ? completedTasks.total : 0}</b> sucessfully completed.</p>
+              </div>
+
+              <div className={styles.right}>
+                <div>
+                  <h2>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h2>
+                  <p>Current Time</p>
+                </div>
+
+                <div>
+                  <h2>{timeRemaining}</h2>
+                  <p>Time Remaining</p>
+                </div>
+              </div>
+            </nav>
+
+            <div className={styles.tasksList}>
+              <table className={styles.table}>
+                <thead>
+                  <tr className={styles.headlinesTable}>
+                    <th>Employee Name</th>
+                    <th>Employee Email</th>
+                    <th>Area</th>
+                    <th>Motor Name</th>
+                    <th>Temperature</th>
+                    <th>Vibration</th>
+                    <th>Bearing Noise</th>
+                    <th>Current Consumption</th>
+                    <th>Duty VS Power</th>
+                    <th>Cleanliness</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {completedTasks ? (
+                    completedTasks.documents.map((task, index) => (
+                      <tr>
+                        <td>{task.employeeName}</td>
+                        <td>{task.employeeEmail}</td>
+                        <td>{task.area}</td>
+                        <td>{task.motorName}</td>
+                        <td>{task.temperature || "N/A"}</td>
+                        <td>{task.vibration || "N/A"}</td>
+                        <td>{task["bearing-noise"] || "N/A"}</td>
+                        <td>{task["current-consumption"] || "N/A"}</td>
+                        <td>{task["duty-vs-power"] || "N/A"}</td>
+                        <td>{task.cleanliness || "N/A"}</td>
+                      </tr>
                     ))
                   ) : (
                     <tr>
