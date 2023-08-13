@@ -233,14 +233,14 @@
 
 .completedTasksContainer, .inCompletedTasksContainer, .tasksContainer {
     width: 100%;
-    max-height: 70vh;
+    height: fit-content;
     background: #ff7a7a;
     border-radius: 12px;
     padding: 1em;
     margin-bottom: 1em;
 }
 
-.inCompletedTasksContainer{
+.completedTasksContainer{
     background: #90ff7a;
 }
 
@@ -317,7 +317,7 @@
     border-top-left-radius: 12px;
 }
 
-.headlinesTable th:nth-child(4){
+.headlinesTable th:last-child{
     border-top-right-radius: 12px;
 }
 
