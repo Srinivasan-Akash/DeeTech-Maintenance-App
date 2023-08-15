@@ -8,12 +8,14 @@ import { account, database } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Query } from 'appwrite';
 
 export default function adminDashboard({ userInfo }) {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
   const [completedTasks, setCompletedTasks] = useState();
   const [employeeList, setEmployeeList] = useState();
+  const [inCompleteTasks, setInCompleteTasks] = useState()
 
   const router = useRouter()
 
@@ -50,28 +52,7 @@ export default function adminDashboard({ userInfo }) {
   }
 
   useEffect(() => {
-    const promise = database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a");
-
-    promise.then(function (response) {
-      setCompletedTasks(response)
-      console.log(response, "DATA BASE RESPONSE IDIOT !!"); // Success
-    }, function (error) {
-      console.log(error); // Failure
-    });
-  }, [])
-
-  useEffect(() => {
-    const promise = database.listDocuments("64d45c73133d8e39e84d", "64d5f385d4889c9ffbda");
-
-    promise.then(function (response) {
-      setEmployeeList(response)
-      console.log(response, "setEmployeeList RESPONSE IDIOT !!"); // Success
-    }, function (error) {
-      console.log(error); // Failure
-    });
-  }, [])
-
-  useEffect(() => {
+    getAllEmployeesIncompleteTasks()
     const calculateRemainingTime = () => {
       const now = new Date();
       const targetTime = new Date(now);
@@ -90,6 +71,57 @@ export default function adminDashboard({ userInfo }) {
       clearInterval(intervalId);
     };
   }, [])
+
+  async function getAllEmployeesIncompleteTasks() {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const incompleteTasksList = [];
+    const maintenanceInfoQueries = [
+      Query.greaterThan('$createdAt', now.toISOString()),
+      Query.lessThan('$createdAt', new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()),
+    ];
+    
+    const maintenanceInfo = await database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", maintenanceInfoQueries);
+    const employees = await database.listDocuments("64d45c73133d8e39e84d", "64d5f385d4889c9ffbda");
+    setEmployeeList(employees)
+    setCompletedTasks(maintenanceInfo)
+
+
+    for (const employee of employees.documents) {
+      const { name, area, email, motorInfo } = employee; // Assuming employee document has name, area, and email fields
+
+      const employeeTasksArr = motorInfo.split(",").map(task => task.trim());
+      const inCompleteEmployeeTasks = [];
+
+      employeeTasksArr.forEach((employeeTask) => {
+        if (employeeTask) {
+          let isTaskPresent = false;
+
+          maintenanceInfo.documents.forEach((maintenanceTask) => {
+            const maintenanceTaskName = maintenanceTask.motorName.replace(" Info", "");
+
+            if (employeeTask === maintenanceTaskName) {
+              isTaskPresent = true;
+            }
+          });
+
+          if (!isTaskPresent) {
+            inCompleteEmployeeTasks.push(employeeTask);
+          }
+        }
+      });
+
+      incompleteTasksList.push({
+        name,
+        area,
+        email,
+        incompleteTasks: inCompleteEmployeeTasks
+      });
+    }
+
+    setInCompleteTasks(incompleteTasksList);
+  }
 
   return (
     <div className={styles.container}>
@@ -158,14 +190,14 @@ export default function adminDashboard({ userInfo }) {
                         <p>{employee.email}</p>
                       </div>
                     </div>
-                  )):
-                <div className={styles.employee}>
-                  <Image className={styles.profilePic} width={100} height={120} src={'/dashboard/profile.png'} alt='A profile pic' />
-                  <div>
-                    <h3>Loading.....</h3>
-                    <p>Loading....</p>
+                  )) :
+                  <div className={styles.employee}>
+                    <Image className={styles.profilePic} width={100} height={120} src={'/dashboard/profile.png'} alt='A profile pic' />
+                    <div>
+                      <h3>Loading.....</h3>
+                      <p>Loading....</p>
+                    </div>
                   </div>
-                </div>
               }
             </div>
           </div>
@@ -174,7 +206,7 @@ export default function adminDashboard({ userInfo }) {
             <nav className={styles.tasksNavbar}>
               <div>
                 <h2>Pending Employee Tasks</h2>
-                <p><b>12</b> Tasks Remaining</p>
+                <p><b>{inCompleteTasks ? inCompleteTasks.length : 0}</b> Failed Employee's</p>
               </div>
 
               <div className={styles.right}>
@@ -194,34 +226,29 @@ export default function adminDashboard({ userInfo }) {
               <table className={styles.table}>
                 <thead>
                   <tr className={styles.headlinesTable}>
+                    <th>Employee Name</th>
+                    <th>Email</th>
                     <th>Area</th>
-                    <th>Motor Name</th>
-                    <th>Total Motors</th>
-                    <th>Status</th>
+                    <th>InComplete Tasks</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <td rowSpan={5}></td>
-
-                  {/* {tasks ? (
-                    tasks.map((task, index) => (
-                      <>
-                        {task.motorInfo.split(",").map((motor, index) => (
-                          <tr key={index}>
-                            <td>{motor.slice(0, -1)}</td>
-                            <td>{motor.charAt(motor.length - 1)}</td>
-                            <td>
-                              <button onClick={openForm}>Complete</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </>
+                  {inCompleteTasks
+                    ? inCompleteTasks.map((incompleteTask, index) => (
+                      incompleteTask.incompleteTasks.length > 0 && (
+                        <tr key={index}>
+                          <td>{incompleteTask.name}</td>
+                          <td>{incompleteTask.email}</td>
+                          <td>{incompleteTask.area}</td>
+                          <td>{incompleteTask.incompleteTasks.join(", ")}</td>
+                        </tr>
+                      )
                     ))
-                  ) : (
-                    <tr>
-                      <td>Loading tasks...</td>
-                    </tr>
-                  )} */}
+                    : (
+                      <tr>
+                        <td colSpan={5}>Loading....</td>
+                      </tr>
+                    )}
                 </tbody>
               </table>
             </div>
@@ -290,7 +317,7 @@ export default function adminDashboard({ userInfo }) {
                     ))
                   ) : (
                     <tr>
-                      <td>Loading tasks...</td>
+                      <td colSpan={5}>Loading....</td>
                     </tr>
                   )}
                 </tbody>

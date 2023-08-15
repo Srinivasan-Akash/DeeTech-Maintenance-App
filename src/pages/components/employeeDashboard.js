@@ -72,7 +72,14 @@ export default function employeeDashboard({ userInfo, tasks }) {
   }
 
   useEffect(() => {
-    const promise = database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", [Query.equal("employeeEmail", userInfo.email)]);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    
+    const promise = database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", [
+      Query.equal("employeeEmail", userInfo.email),
+      Query.greaterThan('$createdAt', now.toISOString()),
+      Query.lessThan('$createdAt', new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()),
+    ]);
 
     promise.then(function (response) {
       setCompletedTasks(response)
