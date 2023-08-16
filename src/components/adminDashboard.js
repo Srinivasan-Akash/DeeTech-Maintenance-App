@@ -132,7 +132,7 @@ export default function adminDashboard({ userInfo }) {
         </div>
 
         <div className={styles.userInfo}>
-          <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.png"} alt='A profile pic' />
+        <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.png"} alt='A profile pic' />
           <h3>{userInfo.name}</h3>
           <p>{userInfo.email}</p>
         </div>
