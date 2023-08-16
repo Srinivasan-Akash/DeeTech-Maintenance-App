@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
 import { FaGear } from "react-icons/fa6";
 import ProfileSettings from './profileSettings';
-import { account, database } from '../appwrite/appwriteConfig';
+import { account, database } from '../../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

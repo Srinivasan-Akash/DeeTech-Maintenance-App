@@ -3,7 +3,7 @@ import EmployeeDashboard from './components/employeeDashboard'
 import AdminDashboard from './components/adminDashboard'
 import LoadingScreen from './components/loadingScreen';
 import styles from '@/styles/Dashboard.module.css';
-import { account, database } from '../pages/appwrite/appwriteConfig';
+import { account, database } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { Query } from 'appwrite';
 // React Toastify

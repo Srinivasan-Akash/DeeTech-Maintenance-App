@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from '@/styles/EmployeeForm.module.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { database } from '../appwrite/appwriteConfig';
+import { database } from '../../appwrite/appwriteConfig';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function EmployeeForm({ userInfo, formUIData, tasks }) {

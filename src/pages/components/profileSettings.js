@@ -3,7 +3,7 @@ import styles from '@/styles/Settings.module.css';
 import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { account } from '../appwrite/appwriteConfig';
+import { account } from '../../appwrite/appwriteConfig';
 
 export default function profileSettings({ userInfo }) {
     const [newName, setNewName] = useState('');
