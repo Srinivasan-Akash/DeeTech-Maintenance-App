@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import EmployeeDashboard from './components/employeeDashboard'
-import AdminDashboard from './components/adminDashboard'
-import LoadingScreen from './components/loadingScreen';
+import EmployeeDashboard from '../components/employeeDashboard'
+import AdminDashboard from '../components/adminDashboard'
+import LoadingScreen from '../components/loadingScreen';
 import styles from '@/styles/Dashboard.module.css';
 import { account, database } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';

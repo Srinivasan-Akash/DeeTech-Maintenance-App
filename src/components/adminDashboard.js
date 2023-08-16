@@ -4,49 +4,29 @@ import Image from 'next/image';
 import { FaSearch, FaBell } from 'react-icons/fa';
 import { FaGear } from "react-icons/fa6";
 import ProfileSettings from './profileSettings';
-import { account, database } from '../../appwrite/appwriteConfig';
+import { account, database } from '../appwrite/appwriteConfig';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AiFillCloseCircle } from "react-icons/ai";
-import EmployeeForm from './employeeForm';
 import { Query } from 'appwrite';
 
-export default function employeeDashboard({ userInfo, tasks }) {
+export default function adminDashboard({ userInfo }) {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isSettingsPanelOpen, setIsSettingsPanelOpen] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [formUIData, setFormUIData] = useState();
   const [completedTasks, setCompletedTasks] = useState();
+  const [employeeList, setEmployeeList] = useState();
+  const [inCompleteTasks, setInCompleteTasks] = useState()
 
   const router = useRouter()
-  console.log(tasks, "TASKL")
 
   const toggleSettingsPanel = () => {
     setIsSettingsPanelOpen(!isSettingsPanelOpen);
-  };
-
-  const openForm = (e) => {
-    const tableRow = e.target.parentNode.parentNode
-    const table = tableRow.parentNode
-
-    const motorName = tableRow.querySelector("td").innerText
-    const totalMotors = tableRow.querySelector("td:nth-child(2)").innerText
-    const area = table.querySelector("td").innerText
-
-    setFormUIData({ motorName, totalMotors, area })
-    setIsPopupOpen(true);
-  }
-
-  const closePopup = () => {
-    setIsPopupOpen(false);
   };
 
   const logOut = async () => {
     try {
       await account.deleteSession("current")
       router.push("/")
-
       toast.success(`✨ Logged Out Sucessfully`, {
         position: "bottom-center",
         autoClose: 5000,
@@ -72,24 +52,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
   }
 
   useEffect(() => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    
-    const promise = database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", [
-      Query.equal("employeeEmail", userInfo.email),
-      Query.greaterThan('$createdAt', now.toISOString()),
-      Query.lessThan('$createdAt', new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()),
-    ]);
-
-    promise.then(function (response) {
-      setCompletedTasks(response)
-      console.log(response, "DATA BASE RESPONSE IDIOT !!"); // Success
-    }, function (error) {
-      console.log(error); // Failure
-    });
-  }, [isPopupOpen])
-
-  useEffect(() => {
+    getAllEmployeesIncompleteTasks()
     const calculateRemainingTime = () => {
       const now = new Date();
       const targetTime = new Date(now);
@@ -108,6 +71,57 @@ export default function employeeDashboard({ userInfo, tasks }) {
       clearInterval(intervalId);
     };
   }, [])
+
+  async function getAllEmployeesIncompleteTasks() {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const incompleteTasksList = [];
+    const maintenanceInfoQueries = [
+      Query.greaterThan('$createdAt', now.toISOString()),
+      Query.lessThan('$createdAt', new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()),
+    ];
+    
+    const maintenanceInfo = await database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", maintenanceInfoQueries);
+    const employees = await database.listDocuments("64d45c73133d8e39e84d", "64d5f385d4889c9ffbda");
+    setEmployeeList(employees)
+    setCompletedTasks(maintenanceInfo)
+
+
+    for (const employee of employees.documents) {
+      const { name, area, email, motorInfo } = employee; // Assuming employee document has name, area, and email fields
+
+      const employeeTasksArr = motorInfo.split(",").map(task => task.trim());
+      const inCompleteEmployeeTasks = [];
+
+      employeeTasksArr.forEach((employeeTask) => {
+        if (employeeTask) {
+          let isTaskPresent = false;
+
+          maintenanceInfo.documents.forEach((maintenanceTask) => {
+            const maintenanceTaskName = maintenanceTask.motorName.replace(" Info", "");
+
+            if (employeeTask === maintenanceTaskName) {
+              isTaskPresent = true;
+            }
+          });
+
+          if (!isTaskPresent) {
+            inCompleteEmployeeTasks.push(employeeTask);
+          }
+        }
+      });
+
+      incompleteTasksList.push({
+        name,
+        area,
+        email,
+        incompleteTasks: inCompleteEmployeeTasks
+      });
+    }
+
+    setInCompleteTasks(incompleteTasksList);
+  }
 
   return (
     <div className={styles.container}>
@@ -132,18 +146,6 @@ export default function employeeDashboard({ userInfo, tasks }) {
       </aside>
 
       <main className={styles.main}>
-        {isPopupOpen && (
-          <div className={styles.overlay}>
-            <div className={styles.popup}>
-              <nav>
-                <h1>Maintenance of {formUIData.totalMotors} {formUIData.motorName} at {formUIData.area}</h1>
-                <button className={styles.closeButton} onClick={closePopup}><AiFillCloseCircle /></button>
-              </nav>
-              <EmployeeForm userInfo={userInfo} formUIData={formUIData} tasks={tasks}></EmployeeForm>
-
-            </div>
-          </div>
-        )}
         <nav className={styles.mainNavbar}>
           <h1>Statistics</h1>
           <div className={styles.rightSideNav}>
@@ -168,8 +170,43 @@ export default function employeeDashboard({ userInfo, tasks }) {
           <div className={styles.tasksContainer}>
             <nav className={styles.tasksNavbar}>
               <div>
-                <h2>Total Tasks</h2>
-                <p><b>{tasks ? (tasks[0].motorInfo.split(",").length).toString().padStart(2, '0'): 0}</b> Tasks Remaining</p>
+                <h2>Employee List</h2>
+                <p><b>{employeeList ? employeeList.total : 0}</b> Employees are working</p>
+              </div>
+
+              <div className={styles.right}>
+                <button className={styles.addEmployeeBtn}>Add Employee</button>
+              </div>
+            </nav>
+
+            <div className={styles.employeesList}>
+              {
+                employeeList ?
+                  employeeList.documents.map((employee, index) => (
+                    <div className={styles.employee}>
+                      <Image className={styles.profilePic} width={100} height={120} src={'/dashboard/profile.png'} alt='A profile pic' />
+                      <div>
+                        <h3>{employee.name}</h3>
+                        <p>{employee.email}</p>
+                      </div>
+                    </div>
+                  )) :
+                  <div className={styles.employee}>
+                    <Image className={styles.profilePic} width={100} height={120} src={'/dashboard/profile.png'} alt='A profile pic' />
+                    <div>
+                      <h3>Loading.....</h3>
+                      <p>Loading....</p>
+                    </div>
+                  </div>
+              }
+            </div>
+          </div>
+
+          <div className={styles.inCompletedTasksContainer}>
+            <nav className={styles.tasksNavbar}>
+              <div>
+                <h2>Pending Employee Tasks</h2>
+                <p><b>{inCompleteTasks ? inCompleteTasks.length : 0}</b> Failed Employee's</p>
               </div>
 
               <div className={styles.right}>
@@ -189,34 +226,29 @@ export default function employeeDashboard({ userInfo, tasks }) {
               <table className={styles.table}>
                 <thead>
                   <tr className={styles.headlinesTable}>
+                    <th>Employee Name</th>
+                    <th>Email</th>
                     <th>Area</th>
-                    <th>Motor Name</th>
-                    <th>Total Motors</th>
-                    <th>Status</th>
+                    <th>InComplete Tasks</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <td rowSpan={5}>{tasks ? tasks[0].area : 'Loading area...'}</td>
-
-                  {tasks ? (
-                    tasks.map((task, index) => (
-                      <>
-                        {task.motorInfo.split(",").map((motor, index) => (
-                          <tr key={index}>
-                            <td>{motor.slice(0, -1)}</td>
-                            <td>{motor.charAt(motor.length - 1)}</td>
-                            <td>
-                              <button onClick={openForm}>Complete</button>
-                            </td>
-                          </tr>
-                        ))}
-                      </>
+                  {inCompleteTasks
+                    ? inCompleteTasks.map((incompleteTask, index) => (
+                      incompleteTask.incompleteTasks.length > 0 && (
+                        <tr key={index}>
+                          <td>{incompleteTask.name}</td>
+                          <td>{incompleteTask.email}</td>
+                          <td>{incompleteTask.area}</td>
+                          <td>{incompleteTask.incompleteTasks.join(", ")}</td>
+                        </tr>
+                      )
                     ))
-                  ) : (
-                    <tr>
-                      <td>Loading tasks...</td>
-                    </tr>
-                  )}
+                    : (
+                      <tr>
+                        <td colSpan={5}>Loading....</td>
+                      </tr>
+                    )}
                 </tbody>
               </table>
             </div>
@@ -246,6 +278,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
               <table className={styles.table}>
                 <thead>
                   <tr className={styles.headlinesTable}>
+                    <th colSpan={2}>Creatation-Date</th>
                     <th>Employee Name</th>
                     <th>Employee Email</th>
                     <th>Area</th>
@@ -262,6 +295,14 @@ export default function employeeDashboard({ userInfo, tasks }) {
                   {completedTasks ? (
                     completedTasks.documents.map((task, index) => (
                       <tr>
+                        <td colSpan={2}>{new Intl.DateTimeFormat("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit",
+                          timeZone: "UTC"
+                        }).format(new Date(task.$createdAt))}</td>
                         <td>{task.employeeName}</td>
                         <td>{task.employeeEmail}</td>
                         <td>{task.area}</td>
@@ -276,7 +317,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
                     ))
                   ) : (
                     <tr>
-                      <td>Loading tasks...</td>
+                      <td colSpan={5}>Loading....</td>
                     </tr>
                   )}
                 </tbody>

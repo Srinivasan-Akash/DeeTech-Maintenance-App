@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Appwrite
 import { v4 as uuidv4 } from 'uuid';
-import { account } from '../../appwrite/appwriteConfig';
+import { account } from '../appwrite/appwriteConfig';
 
 export default function Login() {
     const [email, setEmail] = useState('');
