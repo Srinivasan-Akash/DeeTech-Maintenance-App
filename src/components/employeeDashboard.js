@@ -118,7 +118,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
         </div>
 
         <div className={styles.userInfo}>
-          <Image className={styles.profilePic} width={100} height={120} src={"/profile.png"} alt='A profile pic' />
+        <img className={styles.profilePic} src='https://cloud.appwrite.io/v1/storage/buckets/64dca8f96fee0c8bda65/files/64dca916111fd9385684/view?project=64d3bbb732556214a136&mode=admin'  width={100} height={100}></img>
           <h3>{userInfo.name}</h3>
           <p>{userInfo.email}</p>
         </div>

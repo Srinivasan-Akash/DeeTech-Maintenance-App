@@ -81,7 +81,7 @@ export default function adminDashboard({ userInfo }) {
       Query.greaterThan('$createdAt', now.toISOString()),
       Query.lessThan('$createdAt', new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()),
     ];
-    
+
     const maintenanceInfo = await database.listDocuments("64d45c73133d8e39e84d", "64d775e89561f5813b3a", maintenanceInfoQueries);
     const employees = await database.listDocuments("64d45c73133d8e39e84d", "64d5f385d4889c9ffbda");
     setEmployeeList(employees)
@@ -132,7 +132,8 @@ export default function adminDashboard({ userInfo }) {
         </div>
 
         <div className={styles.userInfo}>
-        <Image className={styles.profilePic} width={100} height={120} src={"/profile.png"} alt='A profile pic' />
+          <img className={styles.profilePic} src='https://cloud.appwrite.io/v1/storage/buckets/64dca8f96fee0c8bda65/files/64dca916111fd9385684/view?project=64d3bbb732556214a136&mode=admin' width={100} height={100}></img>
+
           <h3>{userInfo.name}</h3>
           <p>{userInfo.email}</p>
         </div>
@@ -184,7 +185,7 @@ export default function adminDashboard({ userInfo }) {
                 employeeList ?
                   employeeList.documents.map((employee, index) => (
                     <div className={styles.employee}>
-                      <Image className={styles.profilePic} width={100} height={120} src={'/profile.png'} alt='A profile pic' />
+                      <img className={styles.profilePic} src='https://cloud.appwrite.io/v1/storage/buckets/64dca8f96fee0c8bda65/files/64dca916111fd9385684/view?project=64d3bbb732556214a136&mode=admin' width={100} height={100}></img>
                       <div>
                         <h3>{employee.name}</h3>
                         <p>{employee.email}</p>
@@ -192,7 +193,7 @@ export default function adminDashboard({ userInfo }) {
                     </div>
                   )) :
                   <div className={styles.employee}>
-                    <Image className={styles.profilePic} width={100} height={120} src={'/profile.png'} alt='A profile pic' />
+                    <img className={styles.profilePic} src='https://cloud.appwrite.io/v1/storage/buckets/64dca8f96fee0c8bda65/files/64dca916111fd9385684/view?project=64d3bbb732556214a136&mode=admin' width={100} height={100}></img>
                     <div>
                       <h3>Loading.....</h3>
                       <p>Loading....</p>
