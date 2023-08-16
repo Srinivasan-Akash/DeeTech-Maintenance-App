@@ -127,12 +127,12 @@ export default function adminDashboard({ userInfo }) {
     <div className={styles.container}>
       <aside className={styles.aside}>
         <div className={styles.logoContainer}>
-          <Image className={styles.logo} width={40} height={40} src={"/Login/logo.png"} alt='A profile pic' />
+          <Image className={styles.logo} width={40} height={40} src={"/logo.png"} alt='A profile pic' />
           <h1>Dee-Tech MA</h1>
         </div>
 
         <div className={styles.userInfo}>
-        <Image className={styles.profilePic} width={100} height={120} src={"/dashboard/profile.png"} alt='A profile pic' />
+        <Image className={styles.profilePic} width={100} height={120} src={"/profile.png"} alt='A profile pic' />
           <h3>{userInfo.name}</h3>
           <p>{userInfo.email}</p>
         </div>
@@ -184,7 +184,7 @@ export default function adminDashboard({ userInfo }) {
                 employeeList ?
                   employeeList.documents.map((employee, index) => (
                     <div className={styles.employee}>
-                      <Image className={styles.profilePic} width={100} height={120} src={'/dashboard/profile.png'} alt='A profile pic' />
+                      <Image className={styles.profilePic} width={100} height={120} src={'/profile.png'} alt='A profile pic' />
                       <div>
                         <h3>{employee.name}</h3>
                         <p>{employee.email}</p>
@@ -192,7 +192,7 @@ export default function adminDashboard({ userInfo }) {
                     </div>
                   )) :
                   <div className={styles.employee}>
-                    <Image className={styles.profilePic} width={100} height={120} src={'/dashboard/profile.png'} alt='A profile pic' />
+                    <Image className={styles.profilePic} width={100} height={120} src={'/profile.png'} alt='A profile pic' />
                     <div>
                       <h3>Loading.....</h3>
                       <p>Loading....</p>
