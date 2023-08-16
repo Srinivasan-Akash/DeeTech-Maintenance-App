@@ -104,6 +104,7 @@ export default function employeeDashboard({ userInfo, tasks }) {
     };
     calculateRemainingTime();
     const intervalId = setInterval(calculateRemainingTime, 1000);
+    
     return () => {
       clearInterval(intervalId);
     };
