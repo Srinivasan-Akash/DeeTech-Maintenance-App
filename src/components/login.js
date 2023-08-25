@@ -126,7 +126,7 @@ export default function Login() {
             {loading ? <LoadingScreen /> : (
                 <>
                     <div className={styles.loginForm}>
-                        <Image src={"/Login/logo.png"} alt={"logo"} width={80} height={80} />
+                        <Image src={"/logo.png"} alt={"logo"} width={80} height={80} />
                         <h1>Welcome To Dee-Tech</h1>
                         <p>Login/Register With Your Email</p>
                         <form className={styles.formInput} onSubmit={handleSubmit}>
